@@ -1,0 +1,10 @@
+// An empty struct.
+struct {}
+
+// A struct with 6 fields.
+struct {
+	x, y int
+	u float32
+	A *[]int
+	F func()
+}

@@ -1,0 +1,6 @@
+// A simple File interface
+interface {
+	Read(b Buffer) bool
+	Write(b Buffer) bool
+	Close()
+}

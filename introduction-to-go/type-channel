@@ -1,0 +1,3 @@
+chan T          // can be used to send and receive values of type T
+chan<- float64  // can only be used to send float64s
+<-chan int      // can only be used to receive ints

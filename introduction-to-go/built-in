@@ -1,0 +1,24 @@
+close(c)
+len(s)
+cap(s)
+new(T)
+append(s S, x ...T) S  // T is the element type of S
+copy(dst, src []T) int
+copy(dst []byte, src string) int
+delete(m, k)  // remove element m[k] from map m
+complex(realPart, imaginaryPart floatT) complexT
+real(complexT) floatT
+imag(complexT) floatT
+func panic(interface{})
+func recover() interface{}
+print      prints all arguments; formatting of arguments is implementation-specific
+println    like print but prints spaces between arguments and a newline at the end
+
+Making slices, maps and channels
+Call             Type T     Result
+make(T, n)       slice      slice of type T with length n and capacity n
+make(T, n, m)    slice      slice of type T with length n and capacity m
+make(T)          map        map of type T
+make(T, n)       map        map of type T with initial space for n elements
+make(T)          channel    synchronous channel of type T
+make(T, n)       channel    asynchronous channel of type T, buffer size n
