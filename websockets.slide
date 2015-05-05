@@ -1,0 +1,58 @@
+WebSockets in Go
+Using WebSockets for a simple chat application
+5 May 2015
+
+Jared Howard
+Manager of Development, Rakuten Display
+Rakuten Marketing
+https://github.com/jaredhoward/go-presentations
+
+* Code
+
+https://github.com/jaredhoward/go-presentations
+
+* Chat Server: Hub
+
+.code websockets/server.go /^type hub struct/,/^}/
+
+* Chat Server: Hub Runner
+
+.code websockets/server.go /^func \(h \*hub\) run/,/^}/
+
+* Chat Server: Reader
+
+.code websockets/server.go /^func \(c \*connection\) reader/,/^}/
+
+* Chat Server: Writer
+
+.code websockets/server.go /^func \(c \*connection\) writer/,/^}/
+
+* Chat Server: Upgrade Connection
+
+.code websockets/server.go /^var upgrader/,/^}/
+
+Upgrade to WebSocket connection
+
+.code websockets/server.go /ws, err := upgrader.Upgrade/,/}/
+
+* Chat Server: ServeHTTP
+
+.code websockets/server.go /^func \(wsh wsHandler\) ServeHTTP/,/^}/
+
+* Chat Web Client
+
+http://10.5.50.152:8080/chat-client.html
+
+.iframe http://127.0.0.1:8080/chat-client.html 500 950
+
+* Chat App Client: Dialer
+
+.code websockets/client.go /dialer/,/go writeMessages\(conn, wsClose\)/
+
+* Chat App Client: Writer
+
+.code websockets/client.go /func writeMessages/,/^}/
+
+* Chat App Client: Reader
+
+.code websockets/client.go /func readMessages/,/^}/

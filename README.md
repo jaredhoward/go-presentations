@@ -8,13 +8,15 @@ This includes the Go presentations that I've done.
 These presentations are intended to be ran through the Go present tool.
 
 ```
-https://godoc.org/code.google.com/p/go.tools/present
+https://godoc.org/golang.org/x/tools/present
+https://godoc.org/golang.org/x/tools/cmd/present
 ```
 
 ### Installing the present tool
 
 ```
-go get code.google.com/p/go.tools/cmd/present
+go get golang.org/x/tools/present
+go get golang.org/x/tools/cmd/present
 ```
 
 ### Running the present tool

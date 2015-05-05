@@ -1,0 +1,131 @@
+<style>
+  body {margin:0; padding:8px}
+  #IDContainer, #MsgsContainer {
+    display: none;
+  }
+  #messages {
+    width: 400px;
+    height: 300px;
+    overflow-x: auto;
+    overflow-y: auto;
+    border: 1px solid;
+  }
+  .line {
+    padding: 2px 3px;
+  }
+  .line:nth-child(even) {
+    background-color: lightgoldenrodyellow;
+  }
+  #MsgFormContainer {
+    padding: 10px 0;
+  }
+</style>
+<div id="IDContainer">
+  <form id="IDForm">
+    <p>Enter your name <input type="text" name="name"></p>
+    <input type="submit" value="Connect">
+  </form>
+</div>
+<div id="MsgsContainer">
+  <div id="messages"></div>
+  <div id="MsgFormContainer">
+    <form id="MsgForm">
+      <!--<input type="text" name="mymsg">-->
+      <textarea name="mymsg" rows="2" cols="30"></textarea>
+      <input type="submit" value="Send">
+    </form>
+  </div>
+</div>
+<script>
+  var message = function(rsp) {
+    var m = document.getElementById('messages');
+    m.innerHTML += '<div class="line">' + rsp + '</div>';
+    m.scrollTop = m.scrollHeight;
+  }
+
+  var idCnt = document.getElementById('IDContainer'),
+      idForm = document.getElementById('IDForm'),
+      msgsCnt = document.getElementById('MsgsContainer'),
+      msgFormCnt = document.getElementById('MsgFormContainer'),
+      msgForm = document.getElementById('MsgForm'),
+      mymsg = msgForm.elements.namedItem('mymsg');
+
+  window.onload = function() {
+    if (window["WebSocket"]) {
+      idCnt.style.display='block';
+      idForm.onsubmit = function() {
+        var addr = "ws://" +
+          document.location.host +
+          "/ws?name=" +
+          idForm.elements.namedItem('name').value;
+        makeConnection(addr);
+
+        return false;
+      };
+    } else {
+      document.body.innerHTML = '<p>Your browser does not support websockets</p>';
+    }
+
+    mymsg.onkeydown = function(e){
+      if (e.keyCode == 13 && !e.shiftKey) {
+        msgForm.onsubmit();
+        return false;
+      };
+    };
+  };
+
+  var conn;
+  function makeConnection(addr){
+    conn = new WebSocket(addr);
+    conn.onopen = function(ev) {
+      //console.log(ev);
+      idCnt.style.display='none';
+      msgsCnt.style.display='block';
+
+      mymsg.focus();
+      msgForm.onsubmit = function() {
+        var v = mymsg.value;
+        if (v != '') {
+          conn.send(v);
+        }
+        msgForm.reset();
+        mymsg.focus();
+
+        return false;
+      };
+
+      resizeMessagesContainer();
+    };
+    conn.onclose = function(ev) {
+      //console.log(ev);
+      console.log("closing websocket");
+      msgFormCnt.style.display='none';
+      document.body.innerHTML += '<p><a href="#" onclick="document.location.reload(); return false;">Start another session</a></p>';
+    };
+    conn.onerror = function(ev) {
+      console.log("error happened", ev);
+    };
+    conn.onmessage = function(ev) {
+      message(ev.data);
+    };
+    //conn.close();
+  }
+
+  function resizeMessagesContainer() {
+    var msgs = document.getElementById('messages'),
+        winStyles = window.getComputedStyle(document.body);
+
+    mymsg.style.width = window.innerWidth - parseInt(winStyles.marginLeft) - parseInt(winStyles.marginRight) - 100;
+
+    var formStyles = window.getComputedStyle(msgFormCnt);
+    msgs.style.width = window.innerWidth -
+      (2.5 * (parseInt(winStyles.marginLeft) + parseInt(winStyles.marginLeft))) -
+      (2.5 * (parseInt(winStyles.paddingLeft) + parseInt(winStyles.paddingLeft))) -
+      2;
+    msgs.style.height = window.innerHeight -
+      (2.5 * (parseInt(winStyles.marginTop) + parseInt(winStyles.marginBottom))) -
+      (2.5 * (parseInt(winStyles.paddingTop) + parseInt(winStyles.paddingBottom))) -
+      parseInt(formStyles.height) -
+      2;
+  }
+</script>
